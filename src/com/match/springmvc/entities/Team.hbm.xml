@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.match.springmvc.entities.Team" table="team">
+        <id name="Teamid" type="java.lang.String">
+            <column name="Teamid" />
+            <generator class="assigned" />
+        </id>
+        <property name="Smens" type="java.lang.String">
+            <column name="Smens" />
+        </property>
+        <property name="Tmens" type="java.lang.String">
+            <column name="Tmens" />
+        </property>
+        <property name="Awlevel" type="java.lang.String">
+            <column name="Awlevel" />
+        </property>
+        <property name="Sclevel" type="java.lang.String">
+            <column name="Sclevel" />
+        </property>
+        
+        <!--
+        <property name="Credit" type="java.lang.Float">
+            <column name="Credit" />
+        </property>
+        <property name="Bonus" type="java.lang.Integer">
+            <column name="Bonus" />
+        </property>
+        <property name="Workload" type="java.lang.Integer">
+            <column name="Workload" />
+        </property> 
+        -->
+        
+        <many-to-one name="competition" class="com.match.springmvc.entities.Competition" fetch="join" cascade="all" property-ref="Compid">
+            <column name="Compid" />
+        </many-to-one>        
+        <property name="Tmcname" type="java.lang.String">
+            <column name="Tmcname" />
+        </property>
+        
+        <set name="stuteam" table="stuteam" inverse="false" lazy="false" cascade="all-delete-orphan">
+            <key>
+                <column name="Teamid" />
+            </key>
+            <one-to-many class="com.match.springmvc.entities.StuTeam" />
+        </set>
+        <set name="trteam" table="trteam" inverse="false" lazy="false" cascade="all-delete-orphan">
+            <key>
+                <column name="Teamid" />
+            </key>
+            <one-to-many class="com.match.springmvc.entities.TrTeam" />
+        </set>
+    </class>
+</hibernate-mapping>

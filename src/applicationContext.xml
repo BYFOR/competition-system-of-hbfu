@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+	
+	<!-- 配置自动扫描的包 -->
+	<context:component-scan base-package="com.match.springmvc">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+	</context:component-scan>
+	
+	<!-- 配置数据源，整合其他框架，事务等。 -->
+	
+	<!-- 导入资源文件 -->
+	<context:property-placeholder location="classpath:db.properties"/>
+	
+	<!-- 配置 C3P0 数据源 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="user" value="${jdbc.user}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+		<property name="driverClass" value="${jdbc.driverClass}"></property>
+		<property name="jdbcUrl" value="${jdbc.jdbcUrl}"></property>
+		
+		<property name="initialPoolSize" value="${jdbc.initPoolSize}"></property>
+		<property name="maxPoolSize" value="${jdbc.maxPoolSize}"></property>
+	</bean>
+	
+	<!-- 配置 SessionFactory -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<!-- 配置数据源属性 -->
+		<property name="dataSource" ref="dataSource"></property>
+		<!-- 配置hibernate 的配置文件的位置及名称 -->
+		<property name="configLocation" value="classpath:hibernate.cfg.xml"></property>
+		<!-- 配置hibernate 映射文件的位置及名称，可以使用通配符 -->
+		<property name="mappingLocations" value="classpath:com/match/springmvc/entities/*.hbm.xml"></property>
+	</bean>
+	
+	<!-- 配置 Spring 的声明式事务 -->
+	<!-- 1. 配置 hibernate 的事务管理器 -->
+	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+		
+	</bean>
+	
+	<!--配置使用事务（注解的方式）-->
+	<!-- <tx:annotation-driven transaction-manager="transactionManager"/> -->
+	
+	<!--2. 配置事务属性 -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">  
+        <tx:attributes>  
+            <!-- 拦截的是下段配置aop里设置的路径，即txPointcut中配置的路径 -->  
+            <!-- 具体的propagation含义请自查 -->  
+            <!-- REQUIRED 如果当前没有事务，就新建一个事务，如果已经存在一个事务中，加入到这个事务中。这是最常见的选择。 -->
+            <tx:method name="save*" propagation="REQUIRED" />  
+            <tx:method name="add*" propagation="REQUIRED" />  
+            <tx:method name="create*" propagation="REQUIRED" />  
+            <tx:method name="insert*" propagation="REQUIRED" rollback-for="com.match.springmvc.exception.InsertException" />  
+            <tx:method name="update*" propagation="REQUIRED" />  
+            <tx:method name="merge*" propagation="REQUIRED" />  
+            <tx:method name="del*" propagation="REQUIRED" />  
+            <tx:method name="remove*" propagation="REQUIRED" />  
+            <tx:method name="put*" propagation="REQUIRED" />  
+            <tx:method name="use*" propagation="REQUIRED" />   
+            <tx:method name="find*" read-only="true"/>
+            <!--hibernate4必须配置为开启事务 否则 getCurrentSession()获取不到 -->  
+            <tx:method name="get*" propagation="REQUIRED" read-only="true" />  
+            <tx:method name="count*" propagation="REQUIRED" read-only="true" />  
+            <tx:method name="find*" propagation="REQUIRED" read-only="true" />  
+            <tx:method name="list*" propagation="REQUIRED" read-only="true" />   
+        </tx:attributes>  
+    </tx:advice>  
+    
+    <!-- 3. 配置事务切入点, 再把事务属性和事务切入点关联起来 -->
+    <aop:config>  
+        <!-- 只对业务逻辑层（service层）实施事务 -->  
+        <aop:pointcut id="txPointcut" expression="execution(* com.match.springmvc.service.*.*(..))" />  
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut" />  
+    </aop:config>   
+   	 
+</beans>

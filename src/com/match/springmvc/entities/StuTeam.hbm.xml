@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.match.springmvc.entities.StuTeam" table="stuteam">
+        <id name="SCTid" type="java.lang.Integer">
+            <column name="SCTid" />
+            <generator class="identity" />
+        </id>
+         
+        <many-to-one name="student" class="com.match.springmvc.entities.Student" fetch="join" cascade="all">
+            <column name="Stuid" />
+        </many-to-one> 
+        
+        <property name="Sname" type="java.lang.String">
+            <column name="Sname" />
+        </property>
+        
+        <property name="Sdepartment" type="java.lang.String">
+            <column name="Sdepartment" />
+        </property>
+        
+        <property name="Sclass" type="java.lang.String">
+            <column name="Sclass" />
+        </property>        
+        
+         
+        <many-to-one name="team" class="com.match.springmvc.entities.Team" fetch="join" cascade="all">
+            <column name="Teamid" />
+        </many-to-one> 
+        
+        
+          
+        <many-to-one name="competition" class="com.match.springmvc.entities.Competition" fetch="join" cascade="all" property-ref="Compid">
+            <column name="Compid" />
+        </many-to-one> 
+         <property name="Cname" type="java.lang.String">
+            <column name="Cname" />
+        </property>
+        
+        
+        
+        <property name="Credit" type="java.lang.Double">
+            <column name="Credit" />
+        </property>
+        <property name="Bonus" type="java.math.BigDecimal">
+            <column name="Bonus" />
+        </property>
+        
+        
+        
+        <property name="Header" type="java.lang.String">
+            <column name="Header" />
+        </property>
+        <property name="Teambonus" type="java.math.BigDecimal">
+            <column name="Teambonus" />
+        </property>        
+        
+    </class>
+</hibernate-mapping>

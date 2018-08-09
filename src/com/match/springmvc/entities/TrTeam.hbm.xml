@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.match.springmvc.entities.TrTeam" table="trteam">
+        <id name="TrCTid" type="java.lang.Integer">
+            <column name="TrCTid" />
+            <generator class="identity" />
+        </id>
+        
+         
+        <many-to-one name="teacher" class="com.match.springmvc.entities.Teacher" fetch="join" cascade="all">
+            <column name="Trid" />
+        </many-to-one> 
+        
+        <property name="Tname" type="java.lang.String">
+            <column name="Tname" />
+        </property>
+        
+        <property name="Tdepartment" type="java.lang.String">
+            <column name="Tdepartment" />
+        </property>
+        
+        
+        <many-to-one name="team" class="com.match.springmvc.entities.Team" fetch="join" cascade="all">
+            <column name="Teamid" />
+        </many-to-one> 
+        
+          
+        <many-to-one name="competition" class="com.match.springmvc.entities.Competition" fetch="join" cascade="all" property-ref="Compid">
+            <column name="Compid" />
+        </many-to-one> 
+         <property name="Coname" type="java.lang.String">
+            <column name="Coname" />
+        </property>
+        
+        <property name="Workload" type="java.lang.Integer">
+            <column name="Workload" />
+        </property> 
+        
+    </class>
+</hibernate-mapping>

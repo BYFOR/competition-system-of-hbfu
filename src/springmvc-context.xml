@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+
+	<!-- 配置SpringMVC 自动扫描的包 -->
+	<context:component-scan base-package="com.match.springmvc" use-default-filters="false">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+	</context:component-scan>
+	
+	<!-- 配置视图解析器 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+	
+	
+	<mvc:annotation-driven></mvc:annotation-driven>
+	<mvc:default-servlet-handler/>
+
+	<!-- 上传文件拦截，设置最大上传文件大小   10M=10*1024*1024(B)=10485760 bytes -->  
+	 
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+    	<property name="maxUploadSize" value="10485760" />  
+	</bean>
+	
+	
+	<!-- Start -->
+	<mvc:interceptors>
+		<!-- 检查用户权限，对于部分不需要权限的路径进行排除 -->
+		<mvc:interceptor>
+			<!-- 先匹配所有路径，然后排除不需要检查的路径 -->
+			<mvc:mapping path="/**"/>
+			<bean id="loginInterceptor" class="com.match.springmvc.interceptors.LoginInterceptor">
+				<property name="excludeUrl0">
+					<list>
+						<value>/style/**</value>
+						<value>/css/**</value>
+						<value>/js/**</value>
+						<value>/users/Tzuserlogin</value>
+						<value>/users/Userlogin</value>
+						<value>/users/Tzreg</value>
+						<value>/users/register</value>
+						<value>/users/Tzadminlogin</value>
+						<value>/admin/login</value>
+						<value>/admin/Tzreg</value>
+						<value>/admin/register</value>
+						<value>/admin/FanHuiLogin</value>												
+					</list>
+				</property>
+				<property name="includeUrls">
+					<list>
+						<value>/users/DTzExportChaXun</value>
+						<value>/users/UZhuXiaoDengLu</value>					
+					</list>
+				</property>
+				<property name="excludeUrl">
+					<list>
+						<value>/style/**</value>
+						<value>/css/**</value>
+						<value>/js/**</value>	
+						<value>/admin/TzMain</value>	
+						<value>/users/UZhuXiaoDengLu</value>			
+						<value>/users/DTzExportChaXun</value>
+						<value>/team/TzdTeamInfoImport</value>
+						<value>/team/TzTeamChaXun</value>
+						<value>/team/TzdTeamGuanLi</value>
+						<value>/team/TeamInfoImportHandle</value>						
+						<value>/export/TzdExportChaXun</value>						
+						<value>/export/downloaddepartbonus</value>
+						<value>/export/downloaddepartworkload</value>
+						<value>/export/downloaddepartteambonus</value>												
+					</list>
+				</property>
+			</bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+	<bean id="handlerExceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<prop key="com.match.springmvc.exception.WebAuthException">redirect:/admin/FanHuiLogin</prop>
+				<prop key="com.match.springmvc.exception.WebInfoException">redirect:/admin/FanHuiInfo</prop>
+				<prop key="com.match.springmvc.exception.InsertException">redirect:/team/TzdTeamInfoImport</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- springmvc的配置文件中配置第三步的ExcelMultipartResolver -->
+	<!-- 
+	<bean id="multipartResolver" class="com.match.springmvc.resolver.ExcelMultipartResolver">
+		<property name="defaultEncoding" value="utf-8" />  
+        <property name="maxUploadSize" value="10000000000" />		
+	</bean>
+	 -->
+	
+</beans>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.match.springmvc.entities.Users" table="users">
+        <id name="Usid" type="java.lang.String">
+            <column name="Usid" />
+            <generator class="assigned" />
+        </id>
+        <property name="Uspwd" type="java.lang.String">
+            <column name="Uspwd" />
+        </property>
+        <property name="Usdepartment" type="java.lang.String">
+            <column name="Usdepartment" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.match.springmvc.entities.Student" table="student">
+        <id name="Stuid" type="java.lang.String">
+            <column name="Stuid" />
+            <generator class="assigned" />
+        </id>
+        <property name="Stuname" type="java.lang.String">
+            <column name="Stuname" />
+        </property>
+        <property name="Studepartment" type="java.lang.String">
+            <column name="Studepartment" />
+        </property>
+        <property name="Stuclass" type="java.lang.String">
+            <column name="Stuclass" />
+        </property>               
+        <property name="Stutele" type="java.lang.String">
+            <column name="Stutele" />
+        </property>
+        <property name="Stucard" type="java.lang.String">
+            <column name="Stucard" />
+        </property>
+        <set name="stuteam" table="stuteam" inverse="false" lazy="false" cascade="all-delete-orphan">
+            <key>
+                <column name="Stuid" />
+            </key>
+            <one-to-many class="com.match.springmvc.entities.StuTeam" />
+        </set>
+    </class>
+</hibernate-mapping>

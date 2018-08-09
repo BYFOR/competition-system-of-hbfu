@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.match.springmvc.entities.Judgcri" table="judgcri">
+        <id name="Id" type="java.lang.Integer">
+            <column name="Id" />
+            <generator class="identity" />
+        </id>
+        <property name="Award" type="java.lang.String">
+            <column name="Award" />
+        </property>
+        <property name="Affirmation" type="java.lang.String">
+            <column name="Affirmation" />
+        </property>
+        <property name="Cricredit" type="java.lang.Double">
+            <column name="Cricredit" />
+        </property>
+        <property name="Cribonus" type="java.lang.Double">
+            <column name="Cribonus" />
+        </property>
+        <property name="Criworkload" type="java.lang.Double">
+            <column name="Criworkload" />
+        </property>
+    </class>
+</hibernate-mapping>
